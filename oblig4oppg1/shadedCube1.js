@@ -1,74 +1,117 @@
-    "use strict";
+"use strict";
 
-    let currentColor = function() {
-        let sel = document.getElementById("Farge");
-        return sel.options[sel.selectedIndex].value;
-    };
-    let shadedCube1 = function() {
+let materialAmbient = vec4(0.23125, 0.23125, 0.23125, 1.0);
+let materialDiffuse = vec4(0.2775, 0.2775, 0.2775, 1.0);
+let materialSpecular = vec4(0.773911, 0.773911, 0.773911, 1.0);
+let materialShininess = 89.6;
 
-        let polishedSilver;
-        let silver;
-        let gold;
-        let bronze;
-        let canvas;
-        let gl;
+// let bronze = new Farge(vec4(0.2125, 0.1275, 0.054, 1.0), vec4(0.714, 0.4284, 0.18144, 1.0), vec4(0.393548, 0.271906, 0.166721, 1.0), 25.6);
+// let gold = new Farge(vec4(0.24725, 0.1995, 0.0745, 1.0), vec4(0.75164, 0.60648, 0.22648, 1.0), vec4(0.6282281, 0.555802, 0.366065, 1.0), 51.2);
+// let silver = new Farge(vec4(0.19225, 0.19225, 0.19225, 1.0), vec4(0.50754, 0.50754, 0.50754, 1.0), vec4(0.508273, 0.508273, 0.508273, 1.0), 51.2);
+// let polishedSilver = new Farge(vec4(0.23125, 0.23125, 0.23125, 1.0), vec4(0.2775, 0.2775, 0.2775, 1.0), vec4(0.773911, 0.773911, 0.773911, 1.0), 89.6);
 
-        let numVertices = 36;
+function setMaterial(){
+    if (document.getElementById("fargeatm") === 1) {
+        materialAmbient = vec4(0.2125, 0.1275, 0.054, 1.0);
+        materialDiffuse = vec4(0.714, 0.4284, 0.18144, 1.0);
+        materialSpecular = vec4(0.393548, 0.271906, 0.166721, 1.0);
+        materialShininess = 25.6;
+    } else if (document.getElementById("fargeatm") === 2) {
+        materialAmbient = vec4(0.24725, 0.1995, 0.0745, 1.0);
+        materialDiffuse = vec4(0.75164, 0.60648, 0.22648, 1.0);
+        materialSpecular = vec4(0.6282281, 0.555802, 0.366065, 1.0);
+        materialShininess = 51.2;
+    } else if (document.getElementById("fargeatm") === 3) {
+        materialAmbient = vec4(0.19225, 0.19225, 0.19225, 1.0);
+        materialDiffuse = vec4(0.50754, 0.50754, 0.50754, 1.0);
+        materialSpecular = vec4(0.508273, 0.508273, 0.508273, 1.0);
+        materialShininess = 51.2;
+    } else if (document.getElementById("fargeatm") === 4) {
+        materialAmbient = vec4(0.23125, 0.23125, 0.23125, 1.0);
+        materialDiffuse = vec4(0.2775, 0.2775, 0.2775, 1.0);
+        materialSpecular = vec4(0.773911, 0.773911, 0.773911, 1.0);
+        materialShininess = 89.6;
+    }
+    // if (document.getElementById("fargeatm") === 1) {
+    //     materialAmbient = bronze.getMAmbient();
+    //     materialDiffuse = bronze.getMDiffuse();
+    //     materialSpecular = bronze.getMSpecular();
+    //     materialShininess = bronze.getMShininess();
+    // } else if (document.getElementById("fargeatm") === 2) {
+    //     materialAmbient = gold.getMAmbient();
+    //     materialDiffuse = gold.getMDiffuse();
+    //     materialSpecular = gold.getMSpecular();
+    //     materialShininess = gold.getMShininess();
+    // } else if (document.getElementById("fargeatm") === 3) {
+    //     materialAmbient = silver.getMAmbient();
+    //     materialDiffuse = silver.getMDiffuse();
+    //     materialSpecular = silver.getMSpecular();
+    //     materialShininess = silver.getMShininess();
+    // } else if (document.getElementById("fargeatm") === 4) {
+    //     materialAmbient = polishedSilver.getMAmbient();
+    //     materialDiffuse = polishedSilver.getMDiffuse();
+    //     materialSpecular = polishedSilver.getMSpecular();
+    //     materialShininess = polishedSilver.getMShininess();
+    // }
+}
 
-        let pointsArray = [];
-        let normalsArray = [];
+let shadedCube1 = function() {
 
-        let vertices = [
-            vec4(-0.5, -0.5, 0.5, 1.0),
-            vec4(-0.5, 0.5, 0.5, 1.0),
-            vec4(0.5, 0.5, 0.5, 1.0),
-            vec4(0.5, -0.5, 0.5, 1.0),
-            vec4(-0.5, -0.5, -0.5, 1.0),
-            vec4(-0.5, 0.5, -0.5, 1.0),
-            vec4(0.5, 0.5, -0.5, 1.0),
-            vec4(0.5, -0.5, -0.5, 1.0)
-        ];
+    let canvas;
+    let gl;
 
-        let lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
-        let lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
-        let lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
-        let lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+    let numVertices = 36;
 
-        // Polished silver for starters
-        let materialAmbient = vec4(0.23125, 0.23125, 0.23125, 1.0);
-        let materialDiffuse = vec4(0.2775, 0.2775, 0.2775, 1.0);
-        let materialSpecular = vec4(0.773911, 0.773911, 0.773911, 1.0);
-        let materialShininess = 89.6;
+    let pointsArray = [];
+    let normalsArray = [];
 
-        bronze = new Farge(vec4(0.2125, 0.1275, 0.054, 1.0), vec4(0.714, 0.4284, 0.18144, 1.0), vec4(0.393548, 0.271906, 0.166721, 1.0), 25.6);
-        gold = new Farge(vec4(0.24725, 0.1995, 0.0745, 1.0), vec4(0.75164, 0.60648, 0.22648, 1.0), vec4(0.6282281, 0.555802, 0.366065, 1.0), 51.2);
-        silver = new Farge(vec4(0.19225, 0.19225, 0.19225, 1.0), vec4(0.50754, 0.50754, 0.50754, 1.0), vec4(0.508273, 0.508273, 0.508273, 1.0), 51.2);
-        polishedSilver = new Farge(vec4(0.23125, 0.23125, 0.23125, 1.0), vec4(0.2775, 0.2775, 0.2775, 1.0), vec4(0.773911, 0.773911, 0.773911, 1.0), 89.6);
+    let vertices = [
+        vec4(-0.5, -0.5, 0.5, 1.0),
+        vec4(-0.5, 0.5, 0.5, 1.0),
+        vec4(0.5, 0.5, 0.5, 1.0),
+        vec4(0.5, -0.5, 0.5, 1.0),
+        vec4(-0.5, -0.5, -0.5, 1.0),
+        vec4(-0.5, 0.5, -0.5, 1.0),
+        vec4(0.5, 0.5, -0.5, 1.0),
+        vec4(0.5, -0.5, -0.5, 1.0)
+    ];
 
-        if (currentColor() === "Bronze") {
-            materialAmbient = bronze.getMAmbient();
-            materialDiffuse = bronze.getMDiffuse();
-            materialSpecular = bronze.getMSpecular();
-            materialShininess = bronze.getMShininess();
-        } else if (currentColor() === "Gold") {
-            materialAmbient = gold.getMAmbient();
-            materialDiffuse = gold.getMDiffuse();
-            materialSpecular = gold.getMSpecular();
-            materialShininess = gold.getMShininess();
-        } else if (currentColor() === "Silver") {
-            materialAmbient = silver.getMAmbient();
-            materialDiffuse = silver.getMDiffuse();
-            materialSpecular = silver.getMSpecular();
-            materialShininess = silver.getMShininess();
-        } else if (currentColor() === "Polished silver") {
-            materialAmbient = polishedSilver.getMAmbient();
-            materialDiffuse = polishedSilver.getMDiffuse();
-            materialSpecular = polishedSilver.getMSpecular();
-            materialShininess = polishedSilver.getMShininess();
-        }
 
-    //let ctm;
-    //let ambientColor, diffuseColor, specularColor;
+
+    let lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
+    let lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+    let lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    let lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+
+
+
+// let bronze = new Farge(vec4(0.2125, 0.1275, 0.054, 1.0), vec4(0.714, 0.4284, 0.18144, 1.0), vec4(0.393548, 0.271906, 0.166721, 1.0), 25.6);
+// let gold = new Farge(vec4(0.24725, 0.1995, 0.0745, 1.0), vec4(0.75164, 0.60648, 0.22648, 1.0), vec4(0.6282281, 0.555802, 0.366065, 1.0), 51.2);
+// let silver = new Farge(vec4(0.19225, 0.19225, 0.19225, 1.0), vec4(0.50754, 0.50754, 0.50754, 1.0), vec4(0.508273, 0.508273, 0.508273, 1.0), 51.2);
+// let polishedSilver = new Farge(vec4(0.23125, 0.23125, 0.23125, 1.0), vec4(0.2775, 0.2775, 0.2775, 1.0), vec4(0.773911, 0.773911, 0.773911, 1.0), 89.6);
+
+    // if (farge() === 1) {
+    //     materialAmbient = vec4(0.2125, 0.1275, 0.054, 1.0);
+    //     materialDiffuse = vec4(0.714, 0.4284, 0.18144, 1.0);
+    //     materialSpecular = vec4(0.393548, 0.271906, 0.166721, 1.0);
+    //     materialShininess = 25.6;
+    // } else if (farge() === 2) {
+    //     materialAmbient = vec4(0.24725, 0.1995, 0.0745, 1.0);
+    //     materialDiffuse = vec4(0.75164, 0.60648, 0.22648, 1.0);
+    //     materialSpecular = vec4(0.6282281, 0.555802, 0.366065, 1.0);
+    //     materialShininess = 51.2;
+    // } else if (farge() === 3) {
+    //     materialAmbient = vec4(0.19225, 0.19225, 0.19225, 1.0);
+    //     materialDiffuse = vec4(0.50754, 0.50754, 0.50754, 1.0);
+    //     materialSpecular = vec4(0.508273, 0.508273, 0.508273, 1.0);
+    //     materialShininess = 51.2;
+    // } else if (farge() === 4) {
+    //     materialAmbient = vec4(0.23125, 0.23125, 0.23125, 1.0);
+    //     materialDiffuse = vec4(0.2775, 0.2775, 0.2775, 1.0);
+    //     materialSpecular = vec4(0.773911, 0.773911, 0.773911, 1.0);
+    //     materialShininess = 89.6;
+    // }
+
     let modelViewMatrix, projectionMatrix;
     let viewerPos;
     let program;
@@ -85,24 +128,24 @@
 
     function quad(a, b, c, d) {
 
-         let t1 = subtract(vertices[b], vertices[a]);
-         let t2 = subtract(vertices[c], vertices[b]);
-         let normal = cross(t1, t2);
-         normal = vec3(normal);
+        let t1 = subtract(vertices[b], vertices[a]);
+        let t2 = subtract(vertices[c], vertices[b]);
+        let normal = cross(t1, t2);
+        normal = vec3(normal);
 
 
-         pointsArray.push(vertices[a]);
-         normalsArray.push(normal);
-         pointsArray.push(vertices[b]);
-         normalsArray.push(normal);
-         pointsArray.push(vertices[c]);
-         normalsArray.push(normal);
-         pointsArray.push(vertices[a]);
-         normalsArray.push(normal);
-         pointsArray.push(vertices[c]);
-         normalsArray.push(normal);
-         pointsArray.push(vertices[d]);
-         normalsArray.push(normal);
+        pointsArray.push(vertices[a]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[b]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[c]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[a]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[c]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[d]);
+        normalsArray.push(normal);
     }
 
 
@@ -170,27 +213,28 @@
         document.getElementById("ButtonT").onclick = function(){flag = !flag;};
 
         gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
-           ambientProduct);
+            ambientProduct);
         gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),
-           diffuseProduct );
+            diffuseProduct );
         gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"),
-           specularProduct );
+            specularProduct );
         gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),
-           lightPosition );
+            lightPosition );
 
         gl.uniform1f(gl.getUniformLocation(program,
-           "shininess"),materialShininess);
+            "shininess"),materialShininess);
 
         gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"),
-           false, flatten(projectionMatrix));
+            false, flatten(projectionMatrix));
         render();
     };
 
-    let render = function(){
+    let render = function() {
 
-        gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        setMaterial();
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        if(flag) theta[axis] += 2.0;
+        if (flag) theta[axis] += 2.0;
 
         modelViewMatrix = mat4();
         modelViewMatrix = mult(modelViewMatrix, rotate(theta[xAxis], vec3(1, 0, 0)));
@@ -199,15 +243,14 @@
 
         //console.log(modelView);
 
-        gl.uniformMatrix4fv( gl.getUniformLocation(program,
-                "modelViewMatrix"), false, flatten(modelViewMatrix) );
+        gl.uniformMatrix4fv(gl.getUniformLocation(program,
+            "modelViewMatrix"), false, flatten(modelViewMatrix));
 
-        gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+        gl.drawArrays(gl.TRIANGLES, 0, numVertices);
 
 
         requestAnimationFrame(render);
     }
+};
 
-    };
-
-    shadedCube1();
+shadedCube1();

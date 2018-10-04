@@ -4,7 +4,7 @@ class Farge{
         this.materialAmbient = mAmbient;
         this.materialDiffuse = mDiffuse;
         this.materialSpecular = mSpecular;
-        this.materialShininess= mShininess;
+        this.materialShininess = mShininess;
     }
 
     getMAmbient() {
@@ -21,5 +21,9 @@ class Farge{
 
     getMShininess() {
         return this.materialShininess;
+    }
+
+    toString(){
+        return this.constructor.name;
     }
 }

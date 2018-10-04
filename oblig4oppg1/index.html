@@ -5,13 +5,18 @@
 <button id = "ButtonZ">Rotate Z</button>
 <button id = "ButtonT">Toggle Rotation</button>
 <button type="button" disabled>Farge</button>
-<select name="Farge">
-    <option value="Bronze">Bronze</option>
-    <option value="Gold">Gold</option>
-    <option value="Silver">Silver</option>
-    <option value="Polished silver">Polish silver</option>
+<script type="text/javascript">
+    let fargeatm = 1;
+    function fargeValgt(){
+        fargeatm = document.getElementById("Farge");
+    }
+</script>
+<select name="Farge" onchange="fargeValgt()">
+    <option value="1">Bronze</option>
+    <option value="2">Gold</option>
+    <option value="3">Silver</option>
+    <option value="4">Polish silver</option>
 </select>
-
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es
@@ -89,9 +94,6 @@ main()
 <script type="text/javascript" src="farge.js"></script>
 
 <body>
-<script type="text/javascript">
-    document.getElementById("type").innerHTML =
-</script>
 <canvas id="gl-canvas" width="512" height="512">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
