@@ -1,67 +1,74 @@
     "use strict";
 
+    let currentColor = function() {
+        let sel = document.getElementById("Farge");
+        return sel.options[sel.selectedIndex].value;
+    };
     let shadedCube1 = function() {
 
-    let canvas;
-    let gl;
+        let polishedSilver;
+        let silver;
+        let gold;
+        let bronze;
+        let canvas;
+        let gl;
 
-    let numVertices  = 36;
+        let numVertices = 36;
 
-    let pointsArray = [];
-    let normalsArray = [];
+        let pointsArray = [];
+        let normalsArray = [];
 
-    let vertices = [
-            vec4( -0.5, -0.5,  0.5, 1.0 ),
-            vec4( -0.5,  0.5,  0.5, 1.0 ),
-            vec4( 0.5,  0.5,  0.5, 1.0 ),
-            vec4( 0.5, -0.5,  0.5, 1.0 ),
-            vec4( -0.5, -0.5, -0.5, 1.0 ),
-            vec4( -0.5,  0.5, -0.5, 1.0 ),
-            vec4( 0.5,  0.5, -0.5, 1.0 ),
-            vec4( 0.5, -0.5, -0.5, 1.0 )
+        let vertices = [
+            vec4(-0.5, -0.5, 0.5, 1.0),
+            vec4(-0.5, 0.5, 0.5, 1.0),
+            vec4(0.5, 0.5, 0.5, 1.0),
+            vec4(0.5, -0.5, 0.5, 1.0),
+            vec4(-0.5, -0.5, -0.5, 1.0),
+            vec4(-0.5, 0.5, -0.5, 1.0),
+            vec4(0.5, 0.5, -0.5, 1.0),
+            vec4(0.5, -0.5, -0.5, 1.0)
         ];
 
-        let lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-        let lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
-        let lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
-        let lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+        let lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
+        let lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+        let lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+        let lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
         // Polished silver for starters
-        let materialAmbient = vec4( 0.23125, 0.23125, 0.23125, 1.0 );
-        let materialDiffuse = vec4( 0.2775, 0.2775, 0.2775, 1.0);
-        let materialSpecular = vec4( 0.773911, 0.773911, 0.773911, 1.0 );
+        let materialAmbient = vec4(0.23125, 0.23125, 0.23125, 1.0);
+        let materialDiffuse = vec4(0.2775, 0.2775, 0.2775, 1.0);
+        let materialSpecular = vec4(0.773911, 0.773911, 0.773911, 1.0);
         let materialShininess = 89.6;
 
-        let bronze = new Farge(vec4( 0.2125, 0.1275, 0.054, 1.0 ), vec4( 0.714, 0.4284, 0.18144, 1.0), vec4( 0.393548, 0.271906, 0.166721, 1.0 ), 25.6);
-        let gold = new Farge(vec4( 0.24725, 0.1995, 0.0745, 1.0 ), vec4( 0.75164, 0.60648, 0.22648, 1.0), vec4( 0.6282281, 0.555802, 0.366065, 1.0 ), 51.2);
-        let silver = new Farge(vec4( 0.19225, 0.19225, 0.19225, 1.0 ), vec4( 0.50754, 0.50754, 0.50754, 1.0), vec4( 0.508273, 0.508273, 0.508273, 1.0 ), 51.2);
-        let polishedSilver = new Farge(vec4( 0.23125, 0.23125, 0.23125, 1.0 ), vec4( 0.2775, 0.2775, 0.2775, 1.0), vec4( 0.773911, 0.773911, 0.773911, 1.0 ), 89.6);
+        bronze = new Farge(vec4(0.2125, 0.1275, 0.054, 1.0), vec4(0.714, 0.4284, 0.18144, 1.0), vec4(0.393548, 0.271906, 0.166721, 1.0), 25.6);
+        gold = new Farge(vec4(0.24725, 0.1995, 0.0745, 1.0), vec4(0.75164, 0.60648, 0.22648, 1.0), vec4(0.6282281, 0.555802, 0.366065, 1.0), 51.2);
+        silver = new Farge(vec4(0.19225, 0.19225, 0.19225, 1.0), vec4(0.50754, 0.50754, 0.50754, 1.0), vec4(0.508273, 0.508273, 0.508273, 1.0), 51.2);
+        polishedSilver = new Farge(vec4(0.23125, 0.23125, 0.23125, 1.0), vec4(0.2775, 0.2775, 0.2775, 1.0), vec4(0.773911, 0.773911, 0.773911, 1.0), 89.6);
 
-        let farge = document.getElementById("Farge");
-        if (farge.toString() === "Bronze") {
+        if (currentColor() === "Bronze") {
             materialAmbient = bronze.getMAmbient();
             materialDiffuse = bronze.getMDiffuse();
             materialSpecular = bronze.getMSpecular();
             materialShininess = bronze.getMShininess();
-        } else if (farge.toString() === "Gold") {
+        } else if (currentColor() === "Gold") {
             materialAmbient = gold.getMAmbient();
             materialDiffuse = gold.getMDiffuse();
             materialSpecular = gold.getMSpecular();
             materialShininess = gold.getMShininess();
-        } else if (farge.toString() === "Silver") {
+        } else if (currentColor() === "Silver") {
             materialAmbient = silver.getMAmbient();
             materialDiffuse = silver.getMDiffuse();
             materialSpecular = silver.getMSpecular();
             materialShininess = silver.getMShininess();
-        } else if (farge.toString() === "Polished silver") {
+        } else if (currentColor() === "Polished silver") {
             materialAmbient = polishedSilver.getMAmbient();
             materialDiffuse = polishedSilver.getMDiffuse();
             materialSpecular = polishedSilver.getMSpecular();
             materialShininess = polishedSilver.getMShininess();
         }
 
-    let ctm;
-    let ambientColor, diffuseColor, specularColor;
+    //let ctm;
+    //let ambientColor, diffuseColor, specularColor;
     let modelViewMatrix, projectionMatrix;
     let viewerPos;
     let program;
