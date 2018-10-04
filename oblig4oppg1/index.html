@@ -5,6 +5,13 @@
 <button id = "ButtonY">Rotate Y</button>
 <button id = "ButtonZ">Rotate Z</button>
 <button id = "ButtonT">Toggle Rotation</button>
+<button type="button" disabled>Farge</button>
+<select name="Farge">
+    <option value="Bronze">Bronze</option>
+    <option value="Gold">Gold</option>
+    <option value="Silver">Silver</option>
+    <option value="Polish silver">Polish silver</option>
+</select>
 
 
 <script id="vertex-shader" type="x-shader/x-vertex">
@@ -77,9 +84,9 @@ main()
 }
 </script>
 
-<script type="text/javascript" src="initShaders2.js"></script>
+<script type="text/javascript" src="initShaders1.js"></script>
 <script type="text/javascript" src="MVnew.js"></script>
-<script type="text/javascript" src="shadedCube2.js"></script>
+<script type="text/javascript" src="shadedCube1.js"></script>
 
 <body>
 <canvas id="gl-canvas" width="512" height="512">
