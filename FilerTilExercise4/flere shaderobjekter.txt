@@ -1,0 +1,118 @@
+﻿1. Et programobjekt:
+
+//Anta to kuber:
+    ...
+	 program = initShaders( gl, "vertex-shader", "fragment-shader" );
+	 gl.useProgram( program);
+	 
+	
+		
+   ...
+   
+   var render = function(){
+
+    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    
+
+    // Material 1
+	//Oppdatering av uniformvariable
+	...
+	gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),TODO);        
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), TODO);
+	...
+    
+    modelView = mat4();
+    modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0] ));
+    modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0] ));
+    modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1] ));
+
+    gl.uniformMatrix4fv( gl.getUniformLocation(program,
+        "modelViewMatrix"), false, flatten(modelView) );
+
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+
+    // Material 2
+	//Oppdatering av uniformvariable
+	...
+	gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),TODO);        
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), TODO);
+	....
+    
+    modelView = mat4();
+    modelView = mult(modelView, translate(1,0,0));
+    modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0] ));
+    modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0] ));
+    modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1] ));
+
+    gl.uniformMatrix4fv( gl.getUniformLocation(program,
+        "modelViewMatrix"), false, flatten(modelView) );
+
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+	...
+	
+    window.requestAnimFrame(render);
+}
+----------------------------------------------------------------------------
+2. To programobjekter - ha mulighet for å ha ulike shadere
+
+//Anta to kuber
+ program1 = initShaders2( gl, "vertex-shader1", "fragment-shader1" ); // shaderne kan ligge egne filer.
+ 
+ program2 = initShaders2( gl, "vertex-shader2", "fragment-shader2" ); //
+ 
+ ...
+
+ var render = function(){
+
+    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+    //  Material 1	
+	//Oppdatering av uniformvariable
+         gl.useProgram(program1);
+	...
+	gl.uniform4fv(gl.getUniformLocation(program1, "ambientProduct"),TODO);        
+        gl.uniform4fv(gl.getUniformLocation(program1, "diffuseProduct"), TODO);
+	...
+    
+       modelView = mat4();
+       modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0] ));
+       modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0] ));
+       modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1] ));
+
+       gl.uniformMatrix4fv( gl.getUniformLocation(program1,
+        "modelViewMatrix"), false, flatten(modelView) );
+
+      gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+
+    //  Material 2
+	//Oppdatering av uniformvariable
+        gl.useProgram(program2);
+	...
+	gl.uniform4fv(gl.getUniformLocation(program2, "ambientProduct"),TODO);        
+        gl.uniform4fv(gl.getUniformLocation(program2, "diffuseProduct"), TODO);
+	....
+    
+      modelView = mat4();
+      modelView = mult(modelView, translate(1,0,0));
+      modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0] ));
+      modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0] ));
+      modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1] ));
+
+      gl.uniformMatrix4fv( gl.getUniformLocation(program2,
+              "modelViewMatrix"), false, flatten(modelView) );
+
+      gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+	...
+	
+    window.requestAnimFrame(render);
+}
+
+ 
+ 
+ 
