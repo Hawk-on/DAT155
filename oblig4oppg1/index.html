@@ -5,17 +5,11 @@
 <button id = "ButtonZ">Rotate Z</button>
 <button id = "ButtonT">Toggle Rotation</button>
 <button type="button" disabled>Farge</button>
-<script type="text/javascript">
-    let fargeatm = 1;
-    function fargeValgt(){
-        fargeatm = document.getElementById("Farge");
-    }
-</script>
-<select name="Farge" onchange="fargeValgt()">
-    <option value="1">Bronze</option>
-    <option value="2">Gold</option>
-    <option value="3">Silver</option>
-    <option value="4">Polish silver</option>
+<select id="Farge" onchange="update()">
+    <option value="0">Bronze</option>
+    <option value="1">Gold</option>
+    <option value="2">Silver</option>
+    <option value="3">Polish silver</option>
 </select>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
@@ -33,8 +27,6 @@ uniform float shininess;
 
 void main()
 {
-
-
     vec3 pos = -(modelViewMatrix * aPosition).xyz;
 
     //fixed light postion
@@ -91,7 +83,6 @@ main()
 <script type="text/javascript" src="initShaders1.js"></script>
 <script type="text/javascript" src="MVnew.js"></script>
 <script type="text/javascript" src="shadedCube1.js"></script>
-<script type="text/javascript" src="farge.js"></script>
 
 <body>
 <canvas id="gl-canvas" width="512" height="512">
